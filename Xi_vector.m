@@ -1,10 +1,10 @@
 classdef Xi_vector
     properties
-        u % Fourier_vector - first component of solution 
-        v % Fourier_vector - second component of solution
+        u % Fourier_2D - first component of solution 
+        v % Fourier_2D - second component of solution
         beta % float - parameter in FitHugh-Nagumo
-        phi1 % Fourier_vector - first component of eigenvector
-        phi2 % Fourier_vector - second component of eigenvector
+        phi1 % Fourier_2D - first component of eigenvector
+        phi2 % Fourier_2D - second component of eigenvector
         kappa % float - imaginary part of eigenvalue
     end
     methods
@@ -15,25 +15,30 @@ classdef Xi_vector
             %
             % initialise a Xi_vector, while testing its elements
             
-            if ~isa(u_sol, 'Fourier_vector')
-                u_sol = Fourier_vector(u_sol);
+            if ~isa(u_sol, 'Fourier_2D')
+                u_sol = Fourier_2D(u_sol);
             end
-            if ~isa(v_sol, 'Fourier_vector')
-                v_sol = Fourier_vector(v_sol);
+            if ~isa(v_sol, 'Fourier_2D')
+                v_sol = Fourier_2D(v_sol);
             end
             if ~isa(beta_sol, 'float')
                 error('The parameter BETA has to be real')
             end
                 
-            if ~isa(phi1_sol, 'Fourier_vector')
-                phi1_sol = Fourier_vector(phi1_sol);
+            if ~isa(phi1_sol, 'Fourier_2D')
+                phi1_sol = Fourier_2D(phi1_sol);
             end
             
-            if ~isa(phi2_sol, 'Fourier_vector')
-                phi2_sol = Fourier_vector(phi2_sol);
+            if ~isa(phi2_sol, 'Fourier_2D')
+                phi2_sol = Fourier_2D(phi2_sol);
             end
             if ~isa(kappa_sol, 'float')
                 error('The parameter KAPPA has to be real')
+            end
+            
+            if ~eq_dim(u_sol, v_sol) || ~eq_dim(u_sol, phi1_sol) ...
+                    || ~eq_dim(phi1_sol, phi2_sol)
+                error('All Fourier_2D should have the same dimension')
             end
             
             xi.u = u_sol;
