@@ -180,7 +180,7 @@ classdef Fourier_vector
         function z = plus(u,v)
             % function z = plus(u,v)
             % 
-            % SUM handles sums with scalars and other Fourier
+            % PLUS handles sums with scalars and other Fourier
             % vectors.
             
             if isa(v,'float')
@@ -193,6 +193,29 @@ classdef Fourier_vector
                 else
                     [u_long,v_long] = padVec(u,v);
                     z = Fourier_vector(u_long.vector+v_long.vector);
+                end
+            else
+                error('What are you summing with??')
+            end
+        end
+        
+        
+        function z = minus(u,v)
+            % function z = minus(u,v)
+            % 
+            % MINUS handles substractions with scalars and other Fourier
+            % vectors.
+            
+            if isa(v,'float')
+                v = Fourier_vector(v);
+            end
+            
+            if isa(v,'Fourier_vector')
+                if u.nodes == v.nodes
+                    z = Fourier_vector(u.vector-v.vector);
+                else
+                    [u_long,v_long] = padVec(u,v);
+                    z = Fourier_vector(u_long.vector-v_long.vector);
                 end
             else
                 error('What are you summing with??')

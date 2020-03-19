@@ -137,6 +137,17 @@ end
 
 try 
     number_of_tests = number_of_tests +1;
+    v = Fourier_vector(2);
+    w = Fourier_vector([0,9,0,9,0]);
+    test_vec = Fourier_vector(conv([2],[0,9,0,9,0]));
+    vw = prod(v,w);
+    if vw == test_vec && vw == prod(w,2)
+        Sum = Sum + 1;
+    end
+end
+
+try 
+    number_of_tests = number_of_tests +1;
     w = Fourier_vector([0,-9i,0,9i,0]);
     z = ifft(w);
     if z == ifft([0,9i,0,0,-9i])
