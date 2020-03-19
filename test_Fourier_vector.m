@@ -148,7 +148,7 @@ end
 try 
     number_of_tests = number_of_tests +1;
     w = Fourier_vector([0,9i,0,-9i,0]);
-    plot(w)
+    plot(w,'LineWidth',3)
     Sum = Sum +1;
 end
 
