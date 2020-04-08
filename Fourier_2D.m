@@ -1,6 +1,6 @@
 classdef Fourier_2D
     properties
-        vector         % vector with 2n+1 elements
+        vector         % vector with 2nx+1 * 2ny+1 elements
         nodes_x        % number of nodes in the first dimension
         nodes_y        % number of nodes in the second dimension
         nodes          % array with the number of nodes
@@ -35,6 +35,7 @@ classdef Fourier_2D
            w.nodes = [w.nodes_x, w.nodes_y];
            % w_ifft = ifft(iffthift(sequence));
         end
+        
         
         function z = setNodes_dim(w, new_nodes,dim)
             % function z = pad(w, new_nodes,dim) 
@@ -146,6 +147,51 @@ classdef Fourier_2D
             z2 = pad(w2,nodes_z);
         end
         
+        
+        function z = plus(u,v)
+            % function z = plus(u,v)
+            % 
+            % PLUS handles sums with scalars and other Fourier
+            % vectors.
+            
+            if isa(v,'float')
+                v = Fourier_2D(v);
+            end
+            
+            if isa(v,'Fourier_2D')
+                if all(u.nodes == v.nodes)
+                    z = Fourier_2D(u.vector+v.vector);
+                else
+                    [u_long,v_long] = padVec(u,v);
+                    z = Fourier_2D(u_long.vector+v_long.vector);
+                end
+            else
+                error('What are you summing with??')
+            end
+        end
+        
+        function z = minus(u,v)
+            % function z = minus(u,v)
+            % 
+            % MINUS handles substractions with scalars and other Fourier
+            % vectors.
+            
+            if isa(v,'float')
+                v = Fourier_2D(v);
+            end
+            
+            if isa(v,'Fourier_2D')
+                if all(u.nodes == v.nodes)
+                    z = Fourier_2D(u.vector-v.vector);
+                else
+                    [u_long,v_long] = padVec(u,v);
+                    z = Fourier_2D(u_long.vector-v_long.vector);
+                end
+            else
+                error('What are you summing with??')
+            end
+        end
+        
         function z = prod(u,v,varargin)
             % function z = prod(u,v,varargin)
             % 
@@ -161,6 +207,7 @@ classdef Fourier_2D
                 error('What are you multilying with??')
             end
         end
+        
         
         function bool = eq(u,v)
             % function bool = eq(u,v)
@@ -221,50 +268,22 @@ classdef Fourier_2D
             
         end
         
-        function z = plus(u,v)
-            % function z = plus(u,v)
-            % 
-            % PLUS handles sums with scalars and other Fourier
-            % vectors.
-            
-            if isa(v,'float')
-                v = Fourier_2D(v);
-            end
-            
-            if isa(v,'Fourier_2D')
-                if all(u.nodes == v.nodes)
-                    z = Fourier_2D(u.vector+v.vector);
-                else
-                    [u_long,v_long] = padVec(u,v);
-                    z = Fourier_2D(u_long.vector+v_long.vector);
-                end
-            else
-                error('What are you summing with??')
-            end
+
+        function vec = Fourier2vec(u)
+            % function vec = Fourier2vec(u)
+            %
+            % returns the vector representation of u
+            vec = u.vector(:);
+        end
+        
+        function vec = colon(u)
+            % function vec = colon(u)
+            %
+            % returns the vector representation of u
+            vec = u.vector(:);
         end
         
         
-        function z = minus(u,v)
-            % function z = minus(u,v)
-            % 
-            % MINUS handles substractions with scalars and other Fourier
-            % vectors.
-            
-            if isa(v,'float')
-                v = Fourier_2D(v);
-            end
-            
-            if isa(v,'Fourier_2D')
-                if all(u.nodes == v.nodes)
-                    z = Fourier_2D(u.vector-v.vector);
-                else
-                    [u_long,v_long] = padVec(u,v);
-                    z = Fourier_2D(u_long.vector-v_long.vector);
-                end
-            else
-                error('What are you summing with??')
-            end
-        end
         
         function x = ifft(w)
             % function x = ifft(w)
@@ -285,8 +304,8 @@ classdef Fourier_2D
             x = ifft(w);
             % x = x*w.nodes;
             
-            y_grid = 1:size(x,1);
-            z_grid = 1:size(x,2);
+            y_grid = linspace(-1/2,1/2,size(x,1));
+            z_grid = linspace(-1/2,1/2,size(x,2));
             grid = mesh(y_grid, z_grid, x);
             
             plot3(grid, varargin{:});
