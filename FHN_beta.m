@@ -17,6 +17,9 @@ function uprime = FHN_beta(beta, epsilon, u)
 gamma = 0.5;
 
 if nargin ==2
+    if ~isa(epsilon, 'Xi_vector')
+        error('If only two inputs are given, the second input must be a Xi_vector')
+    end
     xi = epsilon;
     epsilon = xi.epsilon;
     u = xi.u;

@@ -54,7 +54,7 @@ classdef Fourier_2D
             if dim~=1 && dim~=2
                 error('Acting dimension must be either 1 or 2')
             end
-            if lenght(new_nodes) ==2
+            if length(new_nodes) ==2
                 new_nodes = new_nodes(dim);
             end
             
@@ -81,10 +81,10 @@ classdef Fourier_2D
                 
                 % checking leading dimension
                 if dim==2
-                    zero_vec = zeros(1,difference);
+                    zero_vec = zeros(size(w.vector,1),difference);
                     z_vec = cat(2,cat(2,zero_vec,w.vector),zero_vec);
                 else
-                    zero_vec = zeros(difference,1);
+                    zero_vec = zeros(difference,size(w.vector,2));
                     z_vec = cat(1,cat(1,zero_vec,w.vector),zero_vec);
                 end
                 z = Fourier_2D(z_vec);
@@ -204,8 +204,38 @@ classdef Fourier_2D
             elseif isa(v,'float')
                 z = Fourier_2D(u.vector*v);
             else
-                error('What are you multilying with??')
+                error('What are you multiplying with??')
             end
+        end
+        
+        function z = mtimes(a,u)
+            z = prod(u,a);
+        end
+        
+        function z = times(A, u)
+            % function z = times(A, u)
+            % 
+            % matrix multiplication - element by element multiplication
+            if isa(A, 'Fourier_2D') && isa(u, 'Fourier_2D')
+                z = prod(A,u);
+                return
+            elseif isa(A, 'Fourier_2D')
+                temp = A;
+                A = u;
+                u = temp;
+            end
+            
+            if ~isa(A,'float')
+                error('What are you multiplying with??')
+            elseif numel(A)==1
+                z = Fourier_2D(u.vector*A);
+                return
+            elseif size(A,1)~= size(u.vector,1) || size(A,2) ~= size(u.vector,2)
+                error('Sizes not complatible')
+            end
+            
+            z = Fourier_2D(A.*u.vector);
+            
         end
         
         
@@ -276,7 +306,7 @@ classdef Fourier_2D
             vec = u.vector(:);
         end
         
-        function vec = colon(u)
+        function vec = colomn(u)
             % function vec = colon(u)
             %
             % returns the vector representation of u
@@ -290,7 +320,7 @@ classdef Fourier_2D
             % 
             % IFFT of a Fourier vector
             vec = ifftshift(ifftshift(w.vector,1),2);
-            x = ifft2(vec,'symmetric');
+            x = fftshift(fftshift(ifft2(vec,'symmetric'),1),2)*numel(vec);
         end
         
         function plot(w, varargin)
@@ -299,16 +329,17 @@ classdef Fourier_2D
             % plotting functionality for Fourier_2D
             
             
-            w = pad(w,[1000,1000]);
+            w = pad(w,[300,300]);
             
             x = ifft(w);
             % x = x*w.nodes;
             
             y_grid = linspace(-1/2,1/2,size(x,1));
             z_grid = linspace(-1/2,1/2,size(x,2));
-            grid = mesh(y_grid, z_grid, x);
+            %grid =
+            mesh(y_grid, z_grid, x);
             
-            plot3(grid, varargin{:});
+            %plot3(grid, varargin{:});
             
         end
     end

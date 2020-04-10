@@ -1,4 +1,4 @@
-function Delta = operator_Delta(u, nodes_y)
+function Delta = derivative_operator_Delta(u, nodes_y)
 % function Delta = operator_Kx_square(u, nodes_y)
 %
 % returns the operator Kx_square
@@ -20,11 +20,13 @@ end
 
 K = (-nodes_x:nodes_x)';
 K2 = K.^2;
-K2x = repmat(K2,1,2*nodes_y+1);
+K2rep = repmat(K2,1,2*nodes_y+1);
+Kx2 = sparse(diag(K2rep(:)));
 
 K = (-nodes_y:nodes_y);
 K2 = K.^2;
-K2y = repmat(K2,2*nodes_x+1,1);
+K2rep = repmat(K2,2*nodes_x+1,1);
+Ky2 = sparse(diag(K2rep(:)));
 
-Delta = K2x + K2y;
+Delta = Kx2 + Ky2;
 
