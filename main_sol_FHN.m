@@ -39,6 +39,8 @@ xi = Xi_vector(epsilon, epsilon, z_F2D,  z_F2D);
 FHN_beta(beta,xi);
 DFHN_beta(beta, xi);
 
+eigenvalue_problem(beta, xi);
+Deigenvalue_problem_beta(beta, xi);
 
 
 
