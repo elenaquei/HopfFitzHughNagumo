@@ -14,7 +14,7 @@ u = zeros(2*nodes_x+1, 2*nodes_y+1);
 x = -1/2:0.1:1/2;
 y = -1/2:0.1:1/2;
 [X,Y] = meshgrid(x,y);
-z = cos(3*pi*Y)*cos(pi*X);
+z = cos(3*pi*Y)*cos(pi*X) + cos(pi*Y)*cos(3*pi*X)+ cos(5*pi*Y)*cos(5*pi*X);
 %mesh(X,Y,z);
 
 z_fft = fftshift(fftshift(fft2(ifftshift(ifftshift(z,1),2)),1),2)/numel(z);
@@ -26,6 +26,8 @@ z_fft_2 = ifftshift(ifftshift(ifft2(vec,'symmetric'),1),2);
 
 
 z_F2D = Fourier_2D(z_fft);
+
+z_F2D = symmetrise(z_F2D);
 %plot(z_F2D)
 %figure
 zdot = FHN_beta(beta, epsilon, z_F2D);
@@ -33,14 +35,19 @@ zdot = FHN_beta(beta, epsilon, z_F2D);
 DF = DFHN_beta(beta, epsilon, z_F2D);
 
 
-xi = Xi_vector(epsilon, epsilon, z_F2D,  z_F2D);
- 
+xi = Xi_vector(epsilon, rand, z_F2D,  rand(size(z_F2D)).*z_F2D);
+
+xi = symmetrise(xi);
  
 FHN_beta(beta,xi);
 DFHN_beta(beta, xi);
 
 eigenvalue_problem(beta, xi);
 Deigenvalue_problem_beta(beta, xi);
+
+merge_derivatives(beta, xi, xi);
+
+better_xi = Newton_beta(beta, xi, xi);
 
 
 

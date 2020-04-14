@@ -74,6 +74,24 @@ classdef Xi_vector
             z.kappa = xi1.kappa * a;
         end
         
+        function z = pad(xi, new_nodes)
+            % function z = pad(xi, new_nodes)
+            %
+            % pads the two Fourier_2D elements
+            z = xi;
+            z.u = pad(xi.u, new_nodes);
+            z.phi = pad(xi.phi, new_nodes);
+        end
+        
+        function z = setNodes(xi, new_nodes)
+            % function z = setNodes(xi, new_nodes)
+            %
+            % pads the two Fourier_2D elements
+            z = xi;
+            z.u = setNodes(xi.u, new_nodes);
+            z.phi = setNodes(xi.phi, new_nodes);
+        end
+        
         
         function vec = Xi2vec(xi)
             vec = [xi.epsilon;
@@ -82,6 +100,43 @@ classdef Xi_vector
                 Fourier2vec(xi.phi);];
         end
         
+        function xi = symmetrise(xi_conj)
+            % function xi = symmetrise(xi_conj)
+            %
+            % symmetrise the possibly complex input
+            
+            xi = xi_conj;
+            xi.epsilon = real(xi_conj.epsilon);
+            xi.kappa = real(xi_conj.kappa);
+            xi.u = symmetrise(xi_conj.u);
+            xi.phi = symmetrise(xi_conj.phi);
+        end
+        
+        
+        function bool = compatible(xi1, xi2)
+            % function bool = compatible(xi1, xi2)
+            %
+            % returns 1 if they have the same dimension
+            bool = 0;
+            
+            if ~isa(xi2, 'Xi_vector') || ~isa(xi1, 'Xi_vector')
+                return
+            end
+            if xi1.u.nodes_x == xi2.u.nodes_x  && ...
+                    xi1.u.nodes_y == xi2.u.nodes_y  && ...
+                    xi1.phi.nodes_x == xi2.phi.nodes_x  && ...
+                    xi1.phi.nodes_y == xi2.phi.nodes_y  
+                bool = 1;
+            end
+        end
+        
+        function len = length(xi)
+            % function len = length(xi)
+            %
+            % length of the corresponding vector 
+            
+            len = 2 + 2 * length(xi.u) ;
+        end
         
         function plot(xi, varargin)
             subplot(2,1,1)

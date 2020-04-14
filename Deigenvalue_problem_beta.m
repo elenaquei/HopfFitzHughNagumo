@@ -56,6 +56,6 @@ Dphi =  Delta + ...
     ( epsilon ^ -1 + 1 / ( 1i * kappa + epsilon * gamma ) - 1i * kappa ) *  sparse( eye(tot_dim) )...
     - epsilon ^ -1 * convMat2D( prod(u, u, 'same') ,'same');
 
-Depsilon = Depsilon_mat(:);
+Depsilon = Depsilon_mat.vector(:);
 
-Dkappa = Dkappa_mat(:);
+Dkappa = Dkappa_mat.vector(:);

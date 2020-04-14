@@ -238,6 +238,17 @@ classdef Fourier_2D
             
         end
         
+        function z = symmetrise(z_conj)
+            % function z = symmetrise(z_conj)
+            % 
+            % symmetrise the given Xi_vector to endure the corresponding
+            % values are real
+            
+            z = z_conj;
+            
+            z.vector = (z_conj.vector + z_conj.vector(end:-1:1,end:-1:1) ...
+                + conj(z_conj.vector(:,end:-1:1) + z_conj.vector(:,end:-1:1)) )/4;
+        end
         
         function bool = eq(u,v)
             % function bool = eq(u,v)
@@ -313,7 +324,13 @@ classdef Fourier_2D
             vec = u.vector(:);
         end
         
-        
+        function len = length(u)
+            % function len = length(u)
+            %
+            % returns the length of the corresponding vector
+            
+            len = ( 2 * u.nodes_x + 1 ) * ( 2 * u.nodes_y + 1 );
+        end
         
         function x = ifft(w)
             % function x = ifft(w)

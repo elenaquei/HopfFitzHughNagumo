@@ -31,13 +31,16 @@ tot_dim = (2*u.nodes_x+1)*(2*u.nodes_y+1);
 
 Delta = derivative_operator_Delta( u );
 
+unit_F2D = 0*u.vector;
+unit_F2D( u.nodes_x + 1, u.nodes_y + 1) = 1;
+
 DF =  Delta + ...
     epsilon ^ -1 * ( ( 1 + gamma^-1 ) * sparse( eye(tot_dim) )...
     - convMat2D( prod(u, u, 'same') ,'same') );
 
-DF_epsilon_mat = - epsilon^-2 * ( u + 1/3 * ...
+DF_epsilon_mat = - epsilon^-2 * ( u - 1/3 * ...
     prod( prod( u, u, 'same' ), u, 'same' ) + ...
-    gamma ^-1 * u + beta * gamma ^ -1 );
+    gamma ^-1 * u + beta * gamma ^ -1 * unit_F2D);
  
 
-DF_epsilon = DF_epsilon_mat(:);
+DF_epsilon = DF_epsilon_mat.vector(:);
