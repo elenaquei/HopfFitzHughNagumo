@@ -11,6 +11,8 @@ function lin_eqs = setting_linear_equations(x_approx, tangent)
 %     the continuation equation 
 %     the phase condition 
 %     the scaling condition for the eigenvector
+%
+% DEFAULT tangent: parameter continuation in beta
 
 if isa(x_approx,'small_Xi_vector')
     number_equations = 2;
@@ -20,8 +22,13 @@ else
     error('Wrong input')
 end
 
-if ~iscompatible(x_approx, tangent)
-    error('Inputs incompatible')
+if nargin > 1
+    if ~iscompatible(x_approx, tangent)
+        error('Inputs incompatible')
+    end
+else 
+    tangent = 0 * x_approx;
+    tangent.beta = 1;
 end
 
 %% continuation equation
