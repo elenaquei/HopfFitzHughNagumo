@@ -1,7 +1,7 @@
 function Delta = operator_Delta(u, nodes_y)
-% function Delta = operator_Kx_square(u, nodes_y)
+% function Delta = operator_Delta(u, nodes_y)
 %
-% returns the operator Kx_square
+% returns the operator Delta = - K_x ^2 - K_y ^2
 %
 % INPUT
 % u         either the number of rows nodes or a Fourier_2D element
@@ -26,5 +26,5 @@ K = (-nodes_y:nodes_y);
 K2 = K.^2;
 K2y = repmat(K2,2*nodes_x+1,1);
 
-Delta = K2x + K2y;
+Delta = - K2x - K2y;
 
