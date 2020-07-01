@@ -198,7 +198,9 @@ classdef Fourier_2D
             % PROD handles multiplications with scalars and other Fourier
             % vectors through standard convolution. Extra arguments are
             % passed to the convolution function
-            
+            if ~isa(u,'Fourier_2D')
+                z = prod(v,u,varargin{:});
+            end
             if isa(v,'Fourier_2D')
                 z = Fourier_2D(conv2(u.vector,v.vector,varargin{:}));
             elseif isa(v,'float')
@@ -206,6 +208,16 @@ classdef Fourier_2D
             else
                 error('What are you multiplying with??')
             end
+        end
+        
+        function z = lin_prod(u,v)
+            % function z = lin_prod(u,v)
+            % returns < u, v >
+            if ~isa(u,'Fourier_2D') || ~isa(v,'Fourier_2D')
+                error('This is not the product you are looking for')
+            end
+            z = sum(sum(u.vector, v.vector));
+            warning('Do we need a conjugate here??')
         end
         
         function z = mtimes(a,u)
@@ -249,6 +261,25 @@ classdef Fourier_2D
             z.vector = (z_conj.vector + z_conj.vector(end:-1:1,end:-1:1) ...
                 + conj(z_conj.vector(:,end:-1:1) + z_conj.vector(:,end:-1:1)) )/4;
         end
+        
+        function z_vec = der(u)
+            % function z_vec = der(u)
+            % returns i K u (array)
+            K_x = (-u.nodes_x: u.nodes_x).';
+            K_y = -u.nodes_y: u.nodes_y;
+            K = repmat(K_x,1,2*u.nodes_y+1) + repmat(K_y,2*u.nodes_x+1,1);
+            z_vec = 1i * K .* u;
+        end
+        
+        function z_vec = Delta(u)
+            % function z_vec = Delta(u)
+            % returns - K^2 u (array)
+            K_x = (-u.nodes_x: u.nodes_x).';
+            K_y = -u.nodes_y: u.nodes_y;
+            K = repmat(K_x,1,2*u.nodes_y+1) + repmat(K_y,2*u.nodes_x+1,1);
+            z_vec = - K .* K .* u;
+        end
+        
         
         function bool = eq(u,v)
             % function bool = eq(u,v)
