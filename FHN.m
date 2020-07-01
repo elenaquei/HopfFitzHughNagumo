@@ -1,5 +1,5 @@
-function uprime = FHN_beta(beta, epsilon, u)
-% function uprime = FHN_beta(beta, epsilon, u)
+function uprime = FHN(epsilon, beta, u)
+% function uprime = FHN(epsilon, beta, u)
 %
 % INPUT
 % beta          scalar, fixed parameter
@@ -8,17 +8,16 @@ function uprime = FHN_beta(beta, epsilon, u)
 %
 % OR 
 % INPUT
-% beta          scalar, fixed parameter
-% xi            Xi_vector
+% xi            Xi_vector or small_Xi_vector
 %
 % OUTPUT
 % uprime        Fourier_2D
 
 gamma = 0.5;
 
-if nargin ==2
-    if ~isa(epsilon, 'Xi_vector')
-        error('If only two inputs are given, the second input must be a Xi_vector')
+if nargin == 1
+    if ~isa(epsilon, 'Xi_vector') && ~isa(epsilon, 'small_Xi_vector')
+        error('If only one input is given, the input must be a (small_)Xi_vector')
     end
     xi = epsilon;
     epsilon = xi.epsilon;
