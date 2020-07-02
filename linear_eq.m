@@ -4,7 +4,7 @@ classdef linear_eq
         constant       % array with the number of nodes
     end
     methods
-        function w = linear_eqs(coefs, const)
+        function w = linear_eq(coefs, const)
            % function w = linear_eqs(coefs, const)
            if ~isa(coefs,'Xi_vector') && ~isa(coefs,'small_Xi_vector') 
                error('The coefficients have to be of the prescribed form')
@@ -29,7 +29,7 @@ classdef linear_eq
                 error('The coefficients of the linear equation and the vector are incmpatible')
             end
             
-            c = lin_prod(vec, lin_eq.vector) + lin_eq.const;
+            c = lin_prod(vec, lin_eq.vector) + lin_eq.constant;
         end
         
         function d = der(lin_eq)

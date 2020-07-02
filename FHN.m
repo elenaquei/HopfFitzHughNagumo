@@ -21,6 +21,7 @@ if nargin == 1
     end
     xi = epsilon;
     epsilon = xi.epsilon;
+    beta = xi.beta;
     u = xi.u;
 end
 

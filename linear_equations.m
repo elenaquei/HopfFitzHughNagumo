@@ -12,19 +12,20 @@ classdef linear_equations
            if nargin>2 && ~isa(lin_eq3, 'linear_eq')
                error('The linear equations have to be of the prescribed formt')
            end
-           w = cell(nargin,1);
-           w(1) = lin_eq1;
-           w(2) = lin_eq2;
+           linear_eqs = cell(nargin,1);
+           linear_eqs{1} = lin_eq1;
+           linear_eqs{2} = lin_eq2;
            if nargin>2
-                w(3) = lin_eq3;
+                linear_eqs{3} = lin_eq3;
            end
+           w.lin_eqs = linear_eqs;
            w.n_eqs = nargin;
         end
         
         function c = eval(lin_equations, vec)
             % function c = eval(lin_eq, vec)
             % evaluate < vec, lin_eq > + c
-            c = zeros(lin_equations.n_eqs);
+            c = zeros(lin_equations.n_eqs,1);
             for i = 1:lin_equations.n_eqs
                 c(i) = eval(lin_equations.lin_eqs{i}, vec);
             end

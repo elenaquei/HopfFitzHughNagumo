@@ -200,6 +200,7 @@ classdef Fourier_2D
             % passed to the convolution function
             if ~isa(u,'Fourier_2D')
                 z = prod(v,u,varargin{:});
+                return
             end
             if isa(v,'Fourier_2D')
                 z = Fourier_2D(conv2(u.vector,v.vector,varargin{:}));
@@ -216,12 +217,12 @@ classdef Fourier_2D
             if ~isa(u,'Fourier_2D') || ~isa(v,'Fourier_2D')
                 error('This is not the product you are looking for')
             end
-            z = sum(sum(u.vector, v.vector));
+            z = sum(sum(u.vector .* v.vector));
             warning('Do we need a conjugate here??')
         end
         
         function z = mtimes(a,u)
-            z = prod(u,a);
+            z = prod(a,u);
         end
         
         function z = times(A, u)

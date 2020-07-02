@@ -5,19 +5,29 @@ classdef small_Xi_vector
         u % Fourier_2D - first component of solution 
     end
     methods
-        function xi = Xi_vector(epsilon_sol, beta_sol, u_sol)
-            % function xi = Xi_vector(epsilon_sol, u_sol)
+        function xi = small_Xi_vector(epsilon_sol, beta_sol, u_sol)
+            % function xi = small_Xi_vector(epsilon_sol, beta_sol, u_sol)
             %
-            % initialise a Xi_vector, while testing its elements
+            % initialise a small_Xi_vector, while testing its elements
+            
+            
+            if ~isa(epsilon_sol, 'float') 
+                error('The parameter EPSILON has to be a scalar')
+            else 
+                if numel(epsilon_sol)==2 && nargin==2
+                    u_sol = beta_sol;
+                    beta_sol = epsilon_sol(2);
+                    epsilon_sol = epsilon_sol(1);
+                elseif  ~(numel(epsilon_sol)==1 && nargin==3)
+                    error('The parameter EPSILON has to be a scalar')
+                end
+            end
             
             if ~isa(u_sol, 'Fourier_2D')
                 u_sol = Fourier_2D(u_sol);
             end
-            if ~isa(epsilon_sol, 'float') || numel(epsilon_sol)~=1
-                error('The parameter EPSILON has to be a scalar')
-            end
-            
-            if ~isa(beta_sol, 'float') || numel(beta_sol)~=1
+
+            if nargin>2 && (~isa(beta_sol, 'float') || numel(beta_sol)~=1)
                 error('The parameter BETA has to be a scalar')
             end
             
@@ -56,13 +66,18 @@ classdef small_Xi_vector
             if ~isa(xi1,'small_Xi_vector') || ~isa(a,'float') || numel(a)~=1
                 error('small_Xi_vectors only multiply with scalars')
             end
+            z = xi1;
             z.u = xi1.u * a;
             z.epsilon = xi1.epsilon * a;
             z.beta = xi1.beta * a;
         end
         
+        function z = mtimes(xi1,a)
+            z = prod(xi1,a);
+        end
+        
         function z = lin_prod(xi1,xi2)
-            if ~isa(xi1,'Xi_vector') || ~isa(xi2,'Xi_vector') 
+            if ~isa(xi1,'small_Xi_vector') || ~isa(xi2,'small_Xi_vector') 
                 error('This is not the product you ar looking for ~ hand wave')
             end
             z = xi1.epsilon * xi2.epsilon + xi1.beta * xi2.beta + ...
