@@ -1,7 +1,7 @@
 function huge_der = merge_derivatives(beta, xi, bar_xi, bool_big )
 % function huge_der = merge_derivatives(beta, xi, bar_xi, bool_big)
 % 
-% this function computes the derivative of the compelte problem and merges
+% this function computes the derivative of the complete problem and merges
 % it in a matrix. 
 % the third argument is a dimension argument indicating the dimension of
 % the return matrix. 
