@@ -147,6 +147,13 @@ classdef Fourier_2D
             z2 = pad(w2,nodes_z);
         end
         
+        function z = contantSequence(u)
+            % function z = contantSequence(u)
+            %
+            % creates a constant Fourier sequence of the same size as the input
+            z = 0*u;
+            z.vector(u.nodes_x + 1, u.nodes_y + 1) = 1;
+        end
         
         function z = plus(u,v)
             % function z = plus(u,v)

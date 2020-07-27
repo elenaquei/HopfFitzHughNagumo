@@ -32,6 +32,14 @@ classdef linear_eq
             c = lin_prod(vec, lin_eq.vector) + lin_eq.constant;
         end
         
+        function bool = bool_small(lin_eq)
+            bool = isa(lin_eq.vector,'small_Xi_vector') ;
+        end
+        
+        function bool = bool_big(lin_eq)
+            bool = isa(lin_eq.vector,'Xi_vector') ;
+        end
+        
         function d = der(lin_eq)
             d = Xi2vec(lin_eq.vector);
         end
