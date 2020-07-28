@@ -85,7 +85,6 @@ classdef derivative_exact
                 for j = 1:z.size_Fourier
                     index_j = (j-1) * prod(2 * nodes + 1) +1 : j * prod(2 * nodes + 1);
                     finite_matrix(index_i,index_j) = ...
-                        derivative_operator_Delta(cell_vectors{i,j}) + ...
                         convMat2D(cell_vectors{i,j});
                 end
             end

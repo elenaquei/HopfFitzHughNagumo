@@ -96,6 +96,7 @@ end
 
 Fx = small_righthandside(small_xi, small_xi);
 
+lin_eqs = setting_linear_equations(small_xi); 
 DF = derivative_F1(small_xi, lin_eqs, 'same');
 
 vec2xi = @(x) vec2small_Xi_vec(x,small_xi);

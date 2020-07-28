@@ -81,7 +81,7 @@ classdef derivative_approx
                 error('Not considered yet')
             end
             for i = 1:z.size_Fourier
-                index_i = (i-1) * prod(2 * nodes + 1) +1 : i * prod(2 * nodes + 1);
+                index_i = z.size_scalar +( (i-1) * prod(2 * nodes + 1) +1 : i * prod(2 * nodes + 1));
                 for j = 1:z.size_scalar
                     der(j, index_i) = Fourier2vec(z.Fourier2_to_C3{j,i}).';
                     der(index_i, j) = Fourier2vec(z.C3_to_Fourier2{i,j});
