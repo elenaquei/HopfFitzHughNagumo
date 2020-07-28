@@ -1,5 +1,5 @@
-function huge_der = merge_derivatives(beta, xi, bar_xi, bool_big )
-% function huge_der = merge_derivatives(beta, xi, bar_xi, bool_big)
+function huge_der = merge_derivatives(xi, bar_xi, bool_big )
+% function huge_der = merge_derivatives(xi, bar_xi, bool_big)
 % 
 % this function computes the derivative of the complete problem and merges
 % it in a matrix. 
@@ -34,8 +34,8 @@ end
 
 [ ~, D_u ] = shift_equation(xi.u, bar_xi.u);
 [ ~, D_phi ] = scaling_equation(xi.phi, bar_xi.phi);
-[ DF,DF_epsilon] = DFHN_beta(beta, xi);
-[ Depsilon, Du, Dkappa, Dphi ] = Deigenvalue_problem_beta(beta, xi);
+[ DF,DF_epsilon] = DFHN_beta(xi.epsilon, xi.beta, xi.u);
+[ Depsilon, Du, Dkappa, Dphi ] = Deigenvalue_problem_beta(xi);
 
 
 huge_der = sparse([0 0 D_u 0*D_u

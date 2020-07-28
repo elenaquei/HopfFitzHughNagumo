@@ -1,16 +1,7 @@
-function uprime = eigenvalue_problem(~, epsilon, u, kappa, phi)
-% function uprime = FHN_beta(beta, epsilon, u, kappa, phi)
+function uprime = eigenvalue_problem(xi)
+% function uprime = FHN_beta(xi)
 %
 % INPUT
-% beta          scalar, fixed parameter
-% epsilon       scalar
-% u             Fourier_2D
-% kappa         scalar
-% phi           Fourier_2D
-%
-% OR 
-% INPUT
-% beta          scalar, fixed parameter
 % xi            Xi_vector
 %
 % OUTPUT
@@ -18,24 +9,13 @@ function uprime = eigenvalue_problem(~, epsilon, u, kappa, phi)
 
 gamma = 0.5;
 
-if nargin ==2
-    if ~isa(epsilon, 'Xi_vector')
-        error('If only two inputs are given, the second input must be a Xi_vector')
-    end
-    xi = epsilon;
-    epsilon = xi.epsilon;
-    u = xi.u;
-    kappa = xi.kappa;
-    phi = xi.phi;
+if ~isa(xi, 'Xi_vector')
+    error('If only two inputs are given, the second input must be a Xi_vector')
 end
-
-if ~isa(u, 'Fourier_2D') || ~isa(phi, 'Fourier_2D')
-    error('The functions must be handed in a Fourier vectors')
-end
-
-if u.nodes_x ~= phi.nodes_x || u.nodes_y ~= phi.nodes_y
-    error('Inputed Fourier coefficient sizes must be equal')
-end
+epsilon = xi.epsilon;
+u = xi.u;
+kappa = xi.kappa;
+phi = xi.phi;
 
 % derivatives in Fourier space
 Delta = operator_Delta(u);

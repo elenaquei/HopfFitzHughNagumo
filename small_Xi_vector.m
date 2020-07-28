@@ -63,6 +63,11 @@ classdef small_Xi_vector
                 xi1 = a;
                 a = temp;
             end
+            if isa(a, 'small_Xi_vector') || isa(a,'Xi_vector')
+                z = xi1.epsilon * a.epsilon + xi1.beta * a.beta + ....
+                    sum(sum(xi1.u.vector .* a.u.vector));
+                return
+            end
             if ~isa(xi1,'small_Xi_vector') || ~isa(a,'float') || numel(a)~=1
                 error('small_Xi_vectors only multiply with scalars')
             end
@@ -93,6 +98,37 @@ classdef small_Xi_vector
             z.beta = 0;
             z.epsilon = 0;
             z.u = der(xi1.u);
+        end
+        
+        
+        function n = norm(xi)
+            global nu
+            nodes_x = xi.u.nodes_x;
+            nodes_y = xi.u.nodes_y;
+            K = (-nodes_x:nodes_x)';
+            Kxrep = repmat(K,1,2*nodes_y+1);
+
+
+            K = (-nodes_y:nodes_y);
+            Kyrep = repmat(K,2*nodes_x+1,1);
+            
+            K = abs(Kxrep) + abs(Kyrep);
+
+            l1nu = sum(sum(abs(xi.u.vector).*nu.^K));
+            
+            n = max([abs(xi.beta), abs(xi.epsilon), l1nu] );
+        end
+        
+        function n = nodes_x(xi)
+            n = xi.u.nodes_x;
+        end
+        
+        function n = nodes_y(xi)
+            n = xi.u.nodes_y;
+        end
+        
+        function n = nodes(xi)
+            n = xi.u.nodes;
         end
         
         
@@ -150,7 +186,7 @@ classdef small_Xi_vector
             %
             % length of the corresponding vector 
             
-            len = 1 + length(xi.u) ;
+            len = 2 + length(xi.u) ;
         end
         
         function plot(xi, varargin)

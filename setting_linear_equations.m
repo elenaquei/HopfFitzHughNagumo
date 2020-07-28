@@ -27,7 +27,7 @@ if nargin > 1
         error('Inputs incompatible')
     end
 else 
-    tangent = 0 * x_approx;
+    tangent = x_approx * 0;
     tangent.beta = 1;
 end
 

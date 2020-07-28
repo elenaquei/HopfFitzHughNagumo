@@ -11,9 +11,13 @@ function Delta = operator_Delta(u, nodes_y)
 % OUTPUT
 % Delta       matrix representation of the operator Kx^2
 
-if isa(u, 'Fourier_2D')
+if nargin == 1 && isa(u, 'Fourier_2D')
     nodes_x = u.nodes_x;
     nodes_y = u.nodes_y;
+elseif nargin ==1 
+    nodes = (size(u) -1)/2;
+    nodes_x = nodes(1);
+    nodes_y = nodes(2);
 else
     nodes_x = u;
 end

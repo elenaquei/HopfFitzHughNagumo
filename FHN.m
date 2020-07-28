@@ -26,7 +26,7 @@ if nargin == 1
 end
 
 if ~isa(u, 'Fourier_2D')
-    error('The function must be handed in a Fourier vectors')
+    error('The function must be handed in a Fourier_2D vector')
 end
 
 % derivatives in Fourier space

@@ -9,7 +9,8 @@ classdef derivative_approx
         mat_Fourier2_to_Fourier2 % square complex matrix
     end
     methods
-        function z = derivative_exact(mat3by3, fourier_2_C, C_to_fourier, sign_Delta, mat_fourier_2_fourier)
+        function z = derivative_approx(mat3by3, fourier_2_C, C_to_fourier, ...
+                sign_Delta, mat_fourier_2_fourier)
             % function z = derivative_exact(mat3by3, fourier_2_C, C_to_fourier, sign_Delta, mat_fourier_2_fourier)
             %
             % constructor testing all dimensions
@@ -22,23 +23,25 @@ classdef derivative_approx
             if ~iscell(fourier_2_C) || ~iscell(C_to_fourier)
                 error('All other elements must be cells')
             end
-            if size(vec_fourier_2_fourier,1)~= size(vec_fourier_2_fourier,2)
+            if size(mat_fourier_2_fourier,1)~= size(mat_fourier_2_fourier,2)
                 error('Square matrix must be square!')
             else
-                z.size_Fourier = size(vec_fourier_2_fourier,1);
+                
                 z.mat_Fourier2_to_Fourier2 = mat_fourier_2_fourier;
             end
-            if size(fourier_2_C,1) ~= z.size_scalar|| size(fourier_2_C,1) ~= z.size_Fourier
+            if size(fourier_2_C,1) ~= z.size_scalar
                 error('Size of operator l1^n to C^m incompatible')
             else
+                z.size_Fourier = size(fourier_2_C,2);
                 z.Fourier2_to_C3 = fourier_2_C;
             end
             
-            if size(C_to_fourier,1) ~= z.size_Fourier || size(C_to_fourier,1) ~=z.size_scalar
+            if size(C_to_fourier,1) ~= z.size_Fourier || size(C_to_fourier,2) ~=z.size_scalar
                 error('Size of operator l1^n to C^m incompatible')
             else
                 z.C3_to_Fourier2 = C_to_fourier;
             end
+            
             if mod(sign_Delta,1)~= 0
                 error('Power of Delta must be an integer')
             elseif abs(sign_Delta)>1
@@ -64,7 +67,8 @@ classdef derivative_approx
                 end
                 nodes = [max_nodes_x, max_nodes_y];
             end
-            dim_der = z.size_scalar + size(z.mat_Fourier2_to_Fourier2);
+            Delta = operator_Delta(nodes(1), nodes(2));
+            dim_der = z.size_scalar + size(z.mat_Fourier2_to_Fourier2,1);
             der = zeros(dim_der, dim_der);
             der(1:z.size_scalar,1:z.size_scalar) = z.C3_to_C3;
             for i = 1:z.size_Fourier
@@ -79,11 +83,11 @@ classdef derivative_approx
             for i = 1:z.size_Fourier
                 index_i = (i-1) * prod(2 * nodes + 1) +1 : i * prod(2 * nodes + 1);
                 for j = 1:z.size_scalar
-                    der(j, index_i) = z.Fourier2_to_C3{i,j};
-                    der(index_i, j) = z.C3_to_Fourier2{i,j};
+                    der(j, index_i) = Fourier2vec(z.Fourier2_to_C3{j,i}).';
+                    der(index_i, j) = Fourier2vec(z.C3_to_Fourier2{i,j});
                 end
             end
-            der(z.size_scalar+1:end,z.size_scalar+1:end) = z.mat_Fourier2_to_Fourier2;
+            der(z.size_scalar+1:end,z.size_scalar+1:end) = diag(Delta(:)).^z.sign_Delta + z.mat_Fourier2_to_Fourier2;
         end
     end
 end

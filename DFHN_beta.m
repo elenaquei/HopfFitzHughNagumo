@@ -1,5 +1,5 @@
-function [ DF,DF_epsilon] = DFHN_beta(beta, epsilon,  u)
-% function [ DF, DF_epsilon] = DFHN_beta(beta, epsilon, u)
+function [ DF,DF_epsilon] = DFHN_beta(epsilon, beta, u)
+% function [ DF, DF_epsilon] = DFHN_beta(epsilon, beta, u)
 %
 % INPUT
 % beta          scalar, fixed parameter
@@ -17,14 +17,10 @@ function [ DF,DF_epsilon] = DFHN_beta(beta, epsilon,  u)
 
 gamma = 0.5;
 
-if nargin ==2
-    xi = epsilon;
-    epsilon = xi.epsilon;
-    u = xi.u;
-end
-
-if ~isa(u, 'Fourier_2D') 
-    error('The function must be handed in a Fourier vectors')
+if nargin == 1
+    beta = epsilon.beta;
+    u = epsilon.u;
+    epsilon = epsilon.epsilon;
 end
 
 tot_dim = (2*u.nodes_x+1)*(2*u.nodes_y+1);

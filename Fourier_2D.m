@@ -8,37 +8,37 @@ classdef Fourier_2D
     end
     methods
         function w = Fourier_2D(sequence)
-           % function w = Fourier_2D(sequence)
-           %
-           % initialise an element of Fourier_2D with the Fourier
-           % sequence being given
-           
-           % check that it is a vertical or horizontal vector
-           if length(size(sequence))~=2
-               sequence = squeeze(sequence);
-           end
-           
-           % check that the input is a matrix
-           if (numel(sequence)-size(sequence,1)*size(sequence,2))~= 0
-               error('Vector of Fourier_2D needs to have one non-simpleton dimension')
-           end
-           
-           % check it has a well defined number of nodes
-           if mod(size(sequence,1)-1,2)~=0 || mod(size(sequence,2)-1,2)~=0
-               error('For validation purpose, we do not accept Fourier matrices with illdefined nodes')
-           end
-           
-           % store
-           w.vector = sequence;
-           w.nodes_x = (size(sequence,1)-1)/2;
-           w.nodes_y = (size(sequence,2)-1)/2;
-           w.nodes = [w.nodes_x, w.nodes_y];
-           % w_ifft = ifft(iffthift(sequence));
+            % function w = Fourier_2D(sequence)
+            %
+            % initialise an element of Fourier_2D with the Fourier
+            % sequence being given
+            
+            % check that it is a vertical or horizontal vector
+            if length(size(sequence))~=2
+                sequence = squeeze(sequence);
+            end
+            
+            % check that the input is a matrix
+            if (numel(sequence)-size(sequence,1)*size(sequence,2))~= 0
+                error('Vector of Fourier_2D needs to have one non-simpleton dimension')
+            end
+            
+            % check it has a well defined number of nodes
+            if mod(size(sequence,1)-1,2)~=0 || mod(size(sequence,2)-1,2)~=0
+                error('For validation purpose, we do not accept Fourier matrices with illdefined nodes')
+            end
+            
+            % store
+            w.vector = sequence;
+            w.nodes_x = (size(sequence,1)-1)/2;
+            w.nodes_y = (size(sequence,2)-1)/2;
+            w.nodes = [w.nodes_x, w.nodes_y];
+            % w_ifft = ifft(iffthift(sequence));
         end
         
         
         function z = setNodes_dim(w, new_nodes,dim)
-            % function z = pad(w, new_nodes,dim) 
+            % function z = pad(w, new_nodes,dim)
             %
             % SETNODES the Fourier vectors up to the new number of nodes. Can
             % truncate if new_nodes<w.nodes or pad in the opposite
@@ -64,7 +64,7 @@ classdef Fourier_2D
                 % the number of nodes requested is smaller that the
                 % starting number of nodes - truncation
                 difference = old_nodes - new_nodes;
-                if dim ==1 
+                if dim ==1
                     z_vec = w.vector(difference+1:end-difference-1,:);
                 else
                     z_vec = w.vector(:,difference+1:end-difference-1);
@@ -77,7 +77,7 @@ classdef Fourier_2D
             else
                 % the number of nodes requested is greater than the number
                 % of nodes the vector already has - padding
-                difference = new_nodes - old_nodes; 
+                difference = new_nodes - old_nodes;
                 
                 % checking leading dimension
                 if dim==2
@@ -93,7 +93,7 @@ classdef Fourier_2D
         end
         
         function z = setNodes(w, new_nodes)
-            % function z = pad(w, new_nodes) 
+            % function z = pad(w, new_nodes)
             %
             % SETNODES the Fourier vectors up to the new number of nodes. Can
             % truncate if new_nodes<w.nodes or pad in the opposite
@@ -112,7 +112,7 @@ classdef Fourier_2D
         
         function z = pad(w,new_nodes)
             % function z = pad(w,new_nodes)
-            % 
+            %
             % PAD adds zeros until reaching new_nodes
             % If new_nodes is smaller than w.nodes, w is returned unchanged
             reset_nodes = max(w.nodes, new_nodes);
@@ -121,7 +121,7 @@ classdef Fourier_2D
         
         function z = truncate(w,new_nodes)
             % function z = pad(w,new_nodes)
-            % 
+            %
             % TRUNCATE removes elements until reaching new_nodes
             % If new_nodes is bigger than w.nodes, w is returned unchanged
             reset_nodes = min(w.nodes, new_nodes);
@@ -135,7 +135,7 @@ classdef Fourier_2D
             % vectors of the same length by padding the shorter one with
             % the right number of zeros.
             %
-            % INPUT 
+            % INPUT
             % w1,w2     Fourier_2Ds
             % OUTPUT
             % z1,z2     Fourier_2Ds corresponding to w1 and w2 such
@@ -147,8 +147,8 @@ classdef Fourier_2D
             z2 = pad(w2,nodes_z);
         end
         
-        function z = contantSequence(u)
-            % function z = contantSequence(u)
+        function z = constantSequence(u)
+            % function z = constantSequence(u)
             %
             % creates a constant Fourier sequence of the same size as the input
             z = 0*u;
@@ -157,7 +157,7 @@ classdef Fourier_2D
         
         function z = plus(u,v)
             % function z = plus(u,v)
-            % 
+            %
             % PLUS handles sums with scalars and other Fourier
             % vectors.
             
@@ -179,7 +179,7 @@ classdef Fourier_2D
         
         function z = minus(u,v)
             % function z = minus(u,v)
-            % 
+            %
             % MINUS handles substractions with scalars and other Fourier
             % vectors.
             
@@ -201,7 +201,7 @@ classdef Fourier_2D
         
         function z = prod(u,v,varargin)
             % function z = prod(u,v,varargin)
-            % 
+            %
             % PROD handles multiplications with scalars and other Fourier
             % vectors through standard convolution. Extra arguments are
             % passed to the convolution function
@@ -225,7 +225,7 @@ classdef Fourier_2D
                 error('This is not the product you are looking for')
             end
             z = sum(sum(u.vector .* v.vector));
-            warning('Do we need a conjugate here??')
+            % warning('Do we need a conjugate here??')
         end
         
         function z = mtimes(a,u)
@@ -234,7 +234,7 @@ classdef Fourier_2D
         
         function z = times(A, u)
             % function z = times(A, u)
-            % 
+            %
             % matrix multiplication - element by element multiplication
             if isa(A, 'Fourier_2D') && isa(u, 'Fourier_2D')
                 z = prod(A,u);
@@ -260,7 +260,7 @@ classdef Fourier_2D
         
         function z = symmetrise(z_conj)
             % function z = symmetrise(z_conj)
-            % 
+            %
             % symmetrise the given Xi_vector to endure the corresponding
             % values are real
             
@@ -288,10 +288,24 @@ classdef Fourier_2D
             z_vec = - K .* K .* u;
         end
         
+        function n = norm(xi)
+            global nu
+            K = (-xi.nodes_x:xi.nodes_x)';
+            Kxrep = repmat(K,1,2*xi.nodes_y+1);
+            
+            
+            K = (-xi.nodes_y:xi.nodes_y);
+            Kyrep = repmat(K,2*xi.nodes_x+1,1);
+            
+            K = abs(Kxrep) + abs(Kyrep);
+            
+            n = sum(sum(abs(xi.vector).*nu.^K));
+        end
+        
         
         function bool = eq(u,v)
             % function bool = eq(u,v)
-            % 
+            %
             % testing if two Fourier vectors are equal
             bool = false;
             if ~isa(v,'Fourier_2D')
@@ -307,7 +321,7 @@ classdef Fourier_2D
         
         function bool = eq_dim(u,v)
             % function bool = eq_dim(u,v)
-            % 
+            %
             % testing if two Fourier matrices have the same dimension
             bool = false;
             if ~isa(v,'Fourier_2D')
@@ -321,8 +335,8 @@ classdef Fourier_2D
         
         function bool = eq_approx(u,v,tol)
             % function bool = eq_approx(u,v,tol)
-            % 
-            % testing if two Fourier vectors are equal up to a tollerance 
+            %
+            % testing if two Fourier vectors are equal up to a tollerance
             % if the two vectora have different length they will still be
             % considered different, but the values they store might differ
             % up to the tolerance
@@ -348,7 +362,8 @@ classdef Fourier_2D
             
         end
         
-
+        
+        
         function vec = Fourier2vec(u)
             % function vec = Fourier2vec(u)
             %
@@ -373,7 +388,7 @@ classdef Fourier_2D
         
         function x = ifft(w)
             % function x = ifft(w)
-            % 
+            %
             % IFFT of a Fourier vector
             vec = ifftshift(ifftshift(w.vector,1),2);
             x = fftshift(fftshift(ifft2(vec,'symmetric'),1),2)*numel(vec);
@@ -381,7 +396,7 @@ classdef Fourier_2D
         
         function plot(w, varargin)
             % function plot(w, varargin)
-            % 
+            %
             % plotting functionality for Fourier_2D
             
             

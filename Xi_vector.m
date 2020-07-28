@@ -82,6 +82,32 @@ classdef Xi_vector
             z.kappa = xi1.kappa * a;
         end
         
+        function z = dot(xi,a)
+            
+            if isa(a, 'small_Xi_vector') 
+                z = xi.epsilon * a.epsilon + xi.beta * a.beta + ...
+                    sum(sum(xi.u.vector .* a.u.vector));
+            
+            elseif isa(a,'Xi_vector')
+                 z = xi.epsilon * a.epsilon + xi.beta * a.beta + ...
+                    xi.kappa * a.kappa + sum(sum(xi.u.vector .* a.u.vector)) + ...
+                    sum(sum(xi.phi.vector .* a.phi.vector));
+            
+            end
+        end
+        
+        function z = mtimes(xi,a)
+            if ~isa(a,'float') || max(size(a))>1
+                error('It should be a scalar multiplication')
+            end
+            z = xi;
+            z.epsilon = a * xi.epsilon;
+            z.beta = a * xi.beta;
+            z.kappa = a * xi.kappa;
+            z.u = a * xi.u;
+            z.phi = a * xi.phi;
+        end
+        
         function z = lin_prod(xi1,xi2)
             if ~isa(xi1,'Xi_vector') || ~isa(xi2,'Xi_vector') 
                 error('This is not the product you ar looking for ~ hand wave')

@@ -13,40 +13,44 @@ function DF = derivative_F1(xi, cont, phase_cond, varargin)
 % DF                         derivative_exact
 
 
-if nargin == 3
+if ~isa(cont,'linear_equations')
     all_lin_eqs = linear_equations(cont, phase_cond);
-elseif nargin == 2
+else 
     all_lin_eqs = cont;
-else
-    error('Number of inputs kind of odd... either 2 or 3')
+    other_argin = varargin;
+    varargin = cell(size(other_argin,1)+1,1);
+    varargin{1} = phase_cond;
+    for i = 1:size(other_argin,1)
+        varargin{i+1} = other_argin{i};
+    end
 end
 
 % derivatives of linear scalar equations
-[mat2by2, fourier_2_C] = lin_eqs_to_der(linear_eqs);
+[mat2by2, fourier_2_C] = lin_eqs_to_der(all_lin_eqs);
 
 %other derivatives
-C_to_fourier = cell(1,2);
-
-
-
 %?DG_1 = \begin{pmatrix}
 %-\epsilon^{-2}(u - \frac{1}{3}u\conv u \conv u + \gamma^{-1}u + \beta\gamma^{-1}) & \gamma^{-1}\epsilon^{-1} & 0 & \Delta + \epsilon^{-1} (Id - u\conv u  + \gamma^{-1}Id) & 0
 %\end{pmatrix}
+
 epsilon = xi.epsilon;
 beta = xi.beta;
 u = xi.u;
 gamma = 0.5;
 Constant_Four = constantSequence(u);
+
 % highesst power used is three, this way u had its maximum size
 u = prod(prod(u,Constant_Four, varargin{:}),Constant_Four,varargin{:});
 
 % now everything has the right size, no need for varargins anymore
 Constant_Four = constantSequence(u);
 
+C_to_fourier = cell(1,2);
 C_to_fourier{1} = -epsilon^-2*(u - 1/3 * prod(prod(u,u,'same'),u,'same') + 1/gamma*  u + beta/gamma);
 C_to_fourier{2} = 1/(gamma * epsilon) * Constant_Four;
 
-vec_fourier_2_fourier = 1/epsilon * (Constant_Four - prod(u,u,'same')  + gamma * Constant_Four);
+vec_fourier_2_fourier = cell(1,1);
+vec_fourier_2_fourier{1} = 1/epsilon * (( 1 + 1/gamma) * Constant_Four - prod(u,u,'same'));
 
 sign_Delta = +1;
 

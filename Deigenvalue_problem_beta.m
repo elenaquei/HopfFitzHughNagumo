@@ -1,16 +1,7 @@
-function [ Depsilon, Du, Dkappa, Dphi ] = Deigenvalue_problem_beta(~, epsilon,  u, kappa, phi)
-% function [ Depsilon, Du, Dkappa, Dphi ] = DFHN_beta(beta, epsilon, u, kappa, phi)
+function [ Depsilon, Du, Dkappa, Dphi ] = Deigenvalue_problem_beta(xi)
+% function [ Depsilon, Du, Dkappa, Dphi ] = DFHN_beta(xi)
 %
 % INPUT
-% beta          scalar, fixed parameter
-% epsilon       scalar
-% u             Fourier_2D
-% kappa         scalar
-% phi           Fourier_2D
-%
-% OR 
-% INPUT
-% beta          scalar, fixed parameter
 % xi            Xi_vector
 %
 % OUTPUT
@@ -22,24 +13,15 @@ function [ Depsilon, Du, Dkappa, Dphi ] = Deigenvalue_problem_beta(~, epsilon,  
 
 gamma = 0.5;
 
-if nargin ==2
-    if ~isa(epsilon,'Xi_vector')
-        error('If only two inputs are given, the second input must be a Xi_vector')
-    end
-    xi = epsilon;
-    epsilon = xi.epsilon;
-    u = xi.u;
-    kappa = xi.kappa;
-    phi = xi.phi;
-end
 
-if ~isa(u, 'Fourier_2D') || ~isa(phi, 'Fourier_2D')
-    error('The functions must be handed in a Fourier vectors')
+if ~isa(xi,'Xi_vector')
+    error('Input must be a Xi_vector')
 end
+epsilon = xi.epsilon;
+u = xi.u;
+kappa = xi.kappa;
+phi = xi.phi;
 
-if u.nodes_x ~= phi.nodes_x || u.nodes_y ~= phi.nodes_y
-    error('Inputed Fourier coefficient sizes must be equal')
-end
 
 tot_dim = (2*u.nodes_x+1)*(2*u.nodes_y+1);
 
