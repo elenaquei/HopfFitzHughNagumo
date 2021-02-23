@@ -409,7 +409,8 @@ classdef Fourier_2D
             z_grid = linspace(-1/2,1/2,size(x,2));
             %grid =
             mesh(y_grid, z_grid, x);
-            
+            % mesh should be updated
+
             %plot3(grid, varargin{:});
             
         end
