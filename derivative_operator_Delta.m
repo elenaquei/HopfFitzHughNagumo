@@ -28,5 +28,5 @@ K2 = K.^2;
 K2rep = repmat(K2,2*nodes_x+1,1);
 Ky2 = sparse(diag(K2rep(:)));
 
-Delta = Kx2 + Ky2;
+Delta = - Kx2 - Ky2;
 

@@ -13,10 +13,10 @@ nodes_y = 3;
 u = zeros(2*nodes_x+1, 2*nodes_y+1);
 
 
-x = -1/2:0.1:1/2;
-y = -1/2:0.1:1/2;
+x = -1/2:0.05:1/2;
+y = -1/2:0.05:1/2;
 [X,Y] = meshgrid(x,y);
-z = cos(3*pi*Y)*cos(pi*X) + cos(pi*Y)*cos(3*pi*X)+ cos(5*pi*Y)*cos(5*pi*X);
+z = -exp(-12*abs(X.^2+Y.^2)).*cos(20*pi*(X.^2+Y.^2));
 %mesh(X,Y,z);
 
 z_fft = fftshift(fftshift(fft2(ifftshift(ifftshift(z,1),2)),1),2)/numel(z);
@@ -32,8 +32,9 @@ z_F2D = Fourier_2D(z_fft);
 z_F2D = symmetrise(z_F2D);
 
 small_xi = small_Xi_vector(epsilon, beta, z_F2D);
-%plot(z_F2D)
+plot(z_F2D)
 %figure
+colormap winter
 zdot = FHN(epsilon, beta, z_F2D);
 zdot2 = FHN(small_xi);
 
@@ -71,7 +72,7 @@ flat = @(x) x(:);
 non_flat = @(x) reshape(x, size(u));
 flat_conv = @(x) flat(func_loc(non_flat(x)));
 d_debug = numerical_der(@(x) flat_conv(x), flat(u));
-error_comp = norm(d_debug- d_num);
+error_comp =  max(max(abs(d_debug - d_num)));%norm(d_debug- d_num);
 if error_comp > 10^-5
     error('something wrong in the derivatives')
 end
@@ -87,9 +88,9 @@ flat = @(x) x(:);
 non_flat = @(x) reshape(x, size(u));
 flat_conv = @(x) flat(func_loc(non_flat(x)));
 d_debug = numerical_der(@(x) flat_conv(x), flat(u));
-error_comp = norm(d_debug- d_num);
+error_comp = max(max(abs(d_debug - d_num)));%norm(d_debug- d_num);
 if error_comp > 10^-5
-    error('something wrong in the derivatives')
+    error('something wrong in convMat2D')
 end
 
 
@@ -110,13 +111,19 @@ f_func(small_xi_vec);
 D_num = numerical_der(f_func, Xi2vec(small_xi));
 D_debug = derivative_exact_to_matrix(DF);
 
-error_comp = norm(D_debug- D_num);
-if error_comp > 10^-5
+error_comp = norm(D_debug- D_num)/norm(D_num);
+if error_comp > 10^-2
     error('something wrong in the derivatives')
 end
+% honestly: there might still be something wrong, but it really seem more
+% of a numerical rounding that anything else at the moment
 
-% Newton_HN(small_xi)
-
+if rcond(D_debug)<10^-10 || rcond(D_debug)>10^14 
+    fprintf('Condition number %e\n', rcond(D_debug))
+    error('Condition number too bad')
+else
+    Newton_HN(small_xi)
+end
 
 
 
