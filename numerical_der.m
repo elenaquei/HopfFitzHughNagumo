@@ -3,7 +3,7 @@ M = length(func(vec));
 N = length(vec);
 der = zeros(M,N);
 
-h = 10^-5;
+h = 10^-6;
 
 for i = 1:M
     epsilon_i = zeros(size(vec));

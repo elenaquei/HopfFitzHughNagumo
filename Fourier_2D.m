@@ -408,8 +408,8 @@ classdef Fourier_2D
             y_grid = linspace(-1/2,1/2,size(x,1));
             z_grid = linspace(-1/2,1/2,size(x,2));
             %grid =
-            mesh(y_grid, z_grid, x);
-            
+            s = surf(y_grid, z_grid, x);
+            s.EdgeColor = 'none';
             %plot3(grid, varargin{:});
             
         end
